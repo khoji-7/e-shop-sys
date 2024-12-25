@@ -8,15 +8,16 @@ const Table = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [searchTerm, setSearchTerm] = useState(""); // Search state
 
-    useEffect(() => {
-        fetch(`http://3.77.237.29:3000/users?page=1`)
-        .then((response) => response.json())
-        .then((item) => setData(item))
-        .catch((error) => {
-            console.error("Error:", error);
-        });
-    }, []);
+   
 
+    const API_URL = process.env.REACT_APP_API_URL;
+
+useEffect(() => {
+  fetch(`${API_URL}/users?page=1`)
+    .then((response) => response.json())
+    .then((item) => setData(item))
+    .catch((error) => console.error("Error:", error));
+}, []);
     const openModal = (user) => {
         setSelectedUser(user);
         setIsModalOpen(true);
