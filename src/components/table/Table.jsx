@@ -8,16 +8,18 @@ const Table = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [searchTerm, setSearchTerm] = useState(""); // Search state
 
-   
-
     const API_URL = process.env.REACT_APP_API_URL;
 
-useEffect(() => {
-  fetch(`${API_URL}/users?page=1`)
-    .then((response) => response.json())
-    .then((item) => setData(item))
-    .catch((error) => console.error("Error:", error));
-}, []);
+    useEffect(() => {
+        fetch(`${API_URL}/users?page=1`)
+            .then((response) => response.json())
+            .then((item) => {
+                setData(item);
+                console.log("Fetched data:", item); // Ma'lumotlar olinganda konsolga chiqarish
+            })
+            .catch((error) => console.error("Error:", error));
+    }, [API_URL]);
+
     const openModal = (user) => {
         setSelectedUser(user);
         setIsModalOpen(true);
@@ -37,14 +39,16 @@ useEffect(() => {
     };
 
     // Filter data based on search term (for name)
-    const searchData =
-        searchTerm.length >= 2
-            ? data.filter(
-                  (item) =>
-                      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      item.product_name.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-            : data;
+    const searchData = searchTerm.length >= 2
+    ? Array.isArray(data) 
+        ? data.filter(
+            (item) =>
+                item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item.product_name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        : [] // Agar data massiv bo'lmasa, bo'sh massiv qaytaring
+    : data;
+
 
     return (
         <div className="bg-[#f4f4f8] max-w-[1100px] w-[95%] mx-auto mt-4">
