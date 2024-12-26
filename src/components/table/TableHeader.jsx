@@ -10,7 +10,7 @@ const TableHeader = ({ searchTerm, setSearchTerm }) => {
           <MdFilterList className="text-2xl" />
           <p>Filter</p>
         </button>
-        <button className="flex gap-4 px-4 py-2 bg-white rounded-lg bg-[#0042fd] text-white border-gray-400 cursor-pointer">
+        <button className="flex gap-4 px-4 py-2 rounded-lg bg-[#0042fd] text-white border-gray-400 cursor-pointer">
           <MdAdd className="text-2xl" />
           <p>Add Users</p>
         </button>
