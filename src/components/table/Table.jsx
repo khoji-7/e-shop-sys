@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import TableHeader from "./TableHeader"; // Import the TableHeader component
 import UserModal from "./UserModal"; // Modal component import
 
@@ -38,25 +38,24 @@ const Table = () => {
         return `${day}.${month}.${year}`;
     };
 
-    // Filter data based on search term (for name)
+    // Filter data based on search term (for name or product_name)
     const searchData = searchTerm.length >= 2
-    ? Array.isArray(data) 
-        ? data.filter(
-            (item) =>
-                item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                item.product_name.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-        : [] // Agar data massiv bo'lmasa, bo'sh massiv qaytaring
-    : data;
-
+        ? Array.isArray(data)
+            ? data.filter(
+                (item) =>
+                    (item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                    (item.product_name && item.product_name.toLowerCase().includes(searchTerm.toLowerCase()))
+            )
+            : [] // Agar data massiv bo'lmasa, bo'sh massiv qaytaring
+        : data;
 
     return (
-        <div className="bg-[#f4f4f8] max-w-[1100px] w-[95%] mx-auto mt-4">
+        <div className="bg-[#f4f4f8] max-w-[1100px] w-[95%] mx-auto mt-4 h-[80vh]">
             <TableHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 
-            {/* Table content remains the same */}
+            {/* Table content */}
             <div className="mt-5">
-                <table className="w-full border-[1px] border-gray-400">
+                <table className="w-full border-[1px] border-gray-400 h-[50vh] overflow-y-scroll">
                     <thead className="bg-[#f9fafb] rounded-t-md border-2 border-gray-300">
                         <tr>
                             <th className="py-2 px-5 text-gray-600 font-medium text-[16px]">Id</th>
@@ -70,7 +69,8 @@ const Table = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {searchData?.map((item, index) => (
+                        {/* Render filtered data */}
+                        {searchData.map((item, index) => (
                             <tr key={item?.id} className="border-2 border-gray-200 h-16">
                                 <td className="px-5 py-2">{index + 1}</td>
                                 <td
