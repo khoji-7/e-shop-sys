@@ -1,8 +1,12 @@
 import React from "react";
 import { MdFilterList, MdAdd } from "react-icons/md";
 import { IoSearchOutline } from "react-icons/io5";
+import { navigate, useNavigate } from "react-router-dom";
 
-const TableHeader = ({ searchTerm, setSearchTerm }) => {
+const TableHeader = ({ searchTerm, setSearchTerm, openInput }) => {
+  const navigate = useNavigate();
+
+  
   return (
     <div className="flex justify-between items-center">
       <div className="flex gap-4">
@@ -10,7 +14,10 @@ const TableHeader = ({ searchTerm, setSearchTerm }) => {
           <MdFilterList className="text-2xl" />
           <p>Filter</p>
         </button>
-        <button className="flex gap-4 px-4 py-2 rounded-lg bg-[#0042fd] text-white border-gray-400 cursor-pointer">
+        <button
+          className="flex gap-4 px-4 py-2 rounded-lg bg-[#0042fd] text-white border-gray-400 cursor-pointer"
+          onClick={()=> navigate("/adduser")}
+        >
           <MdAdd className="text-2xl" />
           <p>Add Users</p>
         </button>

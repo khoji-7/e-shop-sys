@@ -51,7 +51,13 @@ const Table = () => {
 
     return (
         <div className="bg-[#f4f4f8] max-w-[1100px] w-[95%] mx-auto mt-4 h-[80vh]">
-            <TableHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            {/* Add Button */}
+
+            <TableHeader
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                openModal={openModal}
+            /> 
 
             {/* Table content */}
             <div className="mt-5">
