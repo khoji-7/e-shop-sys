@@ -1,119 +1,188 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const UserForm = ({ onSubmit, initialData = {}, isEdit = false }) => {
-  const [name, setName] = useState(initialData.name || "");
-  const [productName, setProductName] = useState(initialData.productName || "");
-  const [address, setAddress] = useState(initialData.address || "");
-  const [cost, setCost] = useState(initialData.cost || 0);
-  const [phoneNumber, setPhoneNumber] = useState(initialData.phoneNumber || "");
-  const [phoneNumber2, setPhoneNumber2] = useState(initialData.phoneNumber2 || "");
-  const [workplace, setWorkplace] = useState(initialData.workplace || "");
-  const [passportSeries, setPassportSeries] = useState(initialData.passportSeries || "");
-  const [primaryPayment, setPrimaryPayment] = useState(initialData.primaryPayment || 0);
-  const [time, setTime] = useState(initialData.time || 0);
-  const [givenDay, setGivenDay] = useState(initialData.givenDay || "");
-  const [description, setDescription] = useState(initialData.description || "");
+const AddBtn = () => {
+  const [givenDay, setGivenDay] = useState("");
+  const [name, setName] = useState("");
+  const [productName, setProductName] = useState("");
+  const [cost, setCost] = useState();
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber2, setPhoneNumber2] = useState("");
+  const [address, setAddress] = useState("");
+  const [workplace, setWorkplace] = useState("");
+  const [time, setTime] = useState();
+  const [primaryPayment, setPrimaryPayment] = useState();
+  const [passportSeries, setPassportSeries] = useState("");
+  const [description, setDescription] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleDateChange = (e) => {
+    const inputDate = new Date(e.target.value);
+    const formattedDate = inputDate.toLocaleDateString("uz-UZ"); // kk.oo.yyyy formatida
+    setGivenDay(formattedDate);
+  };
+
+  const postMethod = async (e) => {
     e.preventDefault();
 
     const formData = {
       name,
-      productName,
-      address,
+      product_name: productName,
       cost,
-      phoneNumber,
-      phoneNumber2,
+      phone_number: phoneNumber,
+      phone_number2: phoneNumber2,
+      address,
       workplace,
-      passportSeries,
-      primaryPayment,
       time,
-      givenDay,
+      primary_payment: primaryPayment,
+      passport_series: passportSeries,
       description,
+      given_day: givenDay,
     };
 
-    onSubmit(formData);
+    try {
+      const response = await fetch(`http://3.77.237.29:3000/users/add-user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Serverda noma'lum xatolik yuz berdi");
+      }
+
+      alert("Ma'lumot muvaffaqiyatli yuborildi");
+      navigate("/");
+    } catch (error) {
+      alert(`Xatolik yuz berdi: ${error.message}`);
+      console.error("Xatolik haqida ma'lumot:", error);
+    }
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-4 border rounded shadow">
-      <h2 className="text-2xl font-bold text-center mb-4">
-        {isEdit ? "Ma'lumotlarni Tahrirlash" : "Yangi Ma'lumot Qo'shish"}
-      </h2>
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <InputField label="Ismi" value={name} onChange={(e) => setName(e.target.value)} />
-        <InputField label="Mahsulot nomi" value={productName} onChange={(e) => setProductName(e.target.value)} />
-        <InputField label="Manzili" value={address} onChange={(e) => setAddress(e.target.value)} />
-        <InputField
-          label="Narxi"
-          type="number"
-          value={cost}
-          onChange={(e) => setCost(Number(e.target.value))}
-        />
-        <InputField
-          label="Telefon raqami"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-        />
-        <InputField
-          label="2 - Telefon raqami"
-          value={phoneNumber2}
-          onChange={(e) => setPhoneNumber2(e.target.value)}
-        />
-        <InputField
-          label="Ish joyi"
-          value={workplace}
-          onChange={(e) => setWorkplace(e.target.value)}
-        />
-        <InputField
-          label="Pasport seriyasi"
-          value={passportSeries}
-          onChange={(e) => setPassportSeries(e.target.value)}
-        />
-        <InputField
-          label="Bosh to'lov"
-          type="number"
-          value={primaryPayment}
-          onChange={(e) => setPrimaryPayment(Number(e.target.value))}
-        />
-        <InputField
-          label="Nechi oyga berildi"
-          type="number"
-          value={time}
-          onChange={(e) => setTime(Number(e.target.value))}
-        />
-        <InputField
-          label="Berilgan Vaqti"
-          type="date"
-          value={givenDay}
-          onChange={(e) => setGivenDay(e.target.value)}
-        />
-        <InputField
-          label="Qo'shimcha ma'lumot"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+    <div className="h-70vh max-w-[1000px] w-90% mx-auto">
+      <form onSubmit={postMethod} className="grid grid-cols-2">
+        <div className="flex w-[400px] justify-between gap-2 py-2 px-4 items-center">
+          <p className="text-xl">Ismi</p>
+          <input
+            type="text"
+            className="p-2 border-2 rounded-lg"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div className="flex w-[400px] justify-between gap-2 py-2 px-4 items-center">
+          <p className="text-xl">Mahsulot nomi</p>
+          <input
+            type="text"
+            className="p-2 border-2 rounded-lg"
+            value={productName}
+            onChange={(e) => setProductName(e.target.value)}
+          />
+        </div>
+        <div className="flex w-[400px] justify-between gap-2 py-2 px-4 items-center">
+          <p className="text-xl">Manzili</p>
+          <input
+            type="text"
+            className="p-2 border-2 rounded-lg"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
+        </div>
+        <div className="flex w-[400px] justify-between gap-2 py-2 px-4 items-center">
+          <p className="text-xl">Narxi</p>
+          <input
+            type="number"
+            className="p-2 border-2 rounded-lg"
+            value={cost}
+            onChange={(e) => setCost(Number(e.target.value))}
+          />
+        </div>
+        <div className="flex w-[400px] justify-between gap-2 py-2 px-4 items-center">
+          <p className="text-xl">Telefon raqami</p>
+          <input
+            type="text"
+            className="p-2 border-2 rounded-lg"
+            placeholder="+998901234567"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
+        </div>
+        <div className="flex w-[400px] justify-between gap-2 py-2 px-4 items-center">
+          <p className="text-xl">2 - Telefon raqami</p>
+          <input
+            type="text"
+            className="p-2 border-2 rounded-lg"
+            placeholder="+998901234567"
+            value={phoneNumber2}
+            onChange={(e) => setPhoneNumber2(e.target.value)}
+          />
+        </div>
+        <div className="flex w-[400px] justify-between gap-2 py-2 px-4 items-center">
+          <p className="text-xl">Ish joyi</p>
+          <input
+            type="text"
+            className="p-2 border-2 rounded-lg"
+            value={workplace}
+            onChange={(e) => setWorkplace(e.target.value)}
+          />
+        </div>
+        <div className="flex w-[400px] justify-between gap-2 py-2 px-4 items-center">
+          <p className="text-xl">Pasport seriyasi</p>
+          <input
+            type="text"
+            className="p-2 border-2 rounded-lg"
+            value={passportSeries}
+            onChange={(e) => setPassportSeries(e.target.value)}
+          />
+        </div>
+        <div className="flex w-[400px] justify-between gap-2 py-2 px-4 items-center">
+          <p className="text-xl">Bosh to'lov</p>
+          <input
+            type="number"
+            className="p-2 border-2 rounded-lg"
+            value={primaryPayment}
+            onChange={(e) => setPrimaryPayment(Number(e.target.value))}
+          />
+        </div>
+        <div className="flex w-[400px] justify-between gap-2 py-2 px-4 items-center">
+          <p className="text-xl">Berilgan Vaqti</p>
+          <input
+            type="date"
+            className="p-2 border-2 rounded-lg"
+            onChange={handleDateChange}
+          />
+        </div>
+        <div className="flex w-[400px] justify-between gap-2 py-2 px-4 items-center">
+          <p className="text-xl">Nechi oyga berildi</p>
+          <input
+            type="number"
+            className="p-2 border-2 rounded-lg"
+            value={time}
+            onChange={(e) => setTime(Number(e.target.value))}
+          />
+        </div>
+        <div className="flex w-[400px] justify-between gap-2 py-2 px-4 items-center">
+          <p className="text-xl">Qo'shimcha ma'lumot</p>
+          <input
+            type="text"
+            className="p-2 border-2 rounded-lg"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
         <button
           type="submit"
-          className="col-span-2 p-3 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="col-span-2 p-2 bg-blue-500 max-w-36 text-white rounded-lg"
         >
-          {isEdit ? "Yangilash" : "Qo'shish"}
+          Yuborish
         </button>
       </form>
     </div>
   );
 };
 
-const InputField = ({ label, type = "text", value, onChange }) => (
-  <div className="flex flex-col">
-    <label className="font-medium mb-1">{label}</label>
-    <input
-      type={type}
-      value={value}
-      onChange={onChange}
-      className="p-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
-    />
-  </div>
-);
-
-export default UserForm;
+export default AddBtn;
