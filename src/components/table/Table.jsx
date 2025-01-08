@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import TableHeader from "./TableHeader"; // Import the TableHeader component
-import UserModal from "./UserModal"; // Modal component import
+import TableHeader from "./TableHeader";
+import UserModal from "./UserModal";
+import { MdEditSquare } from "react-icons/md";
+import { FaUserXmark } from "react-icons/fa6";
 
 const Table = () => {
     const [data, setData] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
-    const [searchTerm, setSearchTerm] = useState(""); // Search state
+    const [searchTerm, setSearchTerm] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5; // Number of items per page
 
     const API_URL = process.env.REACT_APP_API_URL;
 
@@ -15,7 +19,7 @@ const Table = () => {
             .then((response) => response.json())
             .then((item) => {
                 setData(item);
-                console.log("Fetched data:", item); // Ma'lumotlar olinganda konsolga chiqarish
+                console.log("Fetched data:", item);
             })
             .catch((error) => console.error("Error:", error));
     }, [API_URL]);
@@ -38,7 +42,6 @@ const Table = () => {
         return `${day}.${month}.${year}`;
     };
 
-    // Filter data based on search term (for name or product_name)
     const searchData = searchTerm.length >= 2
         ? Array.isArray(data)
             ? data.filter(
@@ -46,22 +49,35 @@ const Table = () => {
                     (item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
                     (item.product_name && item.product_name.toLowerCase().includes(searchTerm.toLowerCase()))
             )
-            : [] // Agar data massiv bo'lmasa, bo'sh massiv qaytaring
+            : []
         : data;
 
-    return (
-        <div className="bg-[#f4f4f8] max-w-[1100px] w-[95%] mx-auto mt-4 h-[80vh]">
-            {/* Add Button */}
+    // Pagination logic
+    const totalItems = searchData.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const paginatedData = searchData.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
+    const handlePrevious = () => {
+        if (currentPage > 1) setCurrentPage(currentPage - 1);
+    };
+
+    const handleNext = () => {
+        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    };
+
+    return (
+        <div className="bg-[#f4f4f8] max-w-[1100px] w-[95%] mx-auto mt-4 h-[500px]">
             <TableHeader
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
                 openModal={openModal}
-            /> 
+            />
 
-            {/* Table content */}
             <div className="mt-5">
-                <table className="w-full border-[1px] border-gray-400 h-[50vh] overflow-y-scroll">
+                <table className="w-full border-[1px] border-gray-400 h-[350px] overflow-y-scroll">
                     <thead className="bg-[#f9fafb] rounded-t-md border-2 border-gray-300">
                         <tr>
                             <th className="py-2 px-5 text-gray-600 font-medium text-[16px]">Id</th>
@@ -72,32 +88,62 @@ const Table = () => {
                             <th className="py-2 px-5 text-gray-600 font-medium text-[16px]">Berilgan vaqti</th>
                             <th className="py-2 px-5 text-gray-600 font-medium text-[16px]">Oylik to'lov</th>
                             <th className="py-2 px-5 text-gray-600 font-medium text-[16px]">Oldindan to'lov</th>
+                            <th className="py-2 px-5 text-gray-600 font-medium text-[16px]">Action</th>
+
                         </tr>
                     </thead>
                     <tbody>
-                        {/* Render filtered data */}
-                        {searchData.map((item, index) => (
+                        {paginatedData.map((item, index) => (
                             <tr key={item?.id} className="border-2 border-gray-200 h-16">
-                                <td className="px-5 py-2">{index + 1}</td>
+                                <td className="px-5 py-1">{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                                 <td
-                                    className="px-5 py-2 text-blue-500 hover:underline cursor-pointer"
+                                    className="px-5 py-1 text-blue-500 hover:underline cursor-pointer"
                                     onClick={() => openModal(item)}
                                 >
                                     {item?.name}
                                 </td>
-                                <td className="px-5 py-2">{item?.product_name}</td>
-                                <td className="px-5 py-2">{item?.cost} so'm</td>
-                                <td className="px-5 py-2">{item?.phone_number}</td>
-                                <td className="px-5 py-2">{formatDate(item?.given_day)}</td>
-                                <td className="px-5 py-2">{item?.monthly_income} so'm</td>
-                                <td className="px-5 py-2">{item?.payment} so'm</td>
+                                <td className="px-5 py-1">{item?.product_name}</td>
+                                <td className="px-5 py-1">{item?.cost} so'm</td>
+                                <td className="px-5 py-1">{item?.phone_number}</td>
+                                <td className="px-5 py-1">{formatDate(item?.given_day)}</td>
+                                <td className="px-5 py-1">{item?.monthly_income} so'm</td>
+                                <td className="px-5 py-1">{item?.payment} so'm</td>
+                                <td className="px-2 py-3 flex items-center justify-between ">
+                                    <button  >
+                                       <MdEditSquare className="text-[#4070f4] text-3xl"/>
+                                    </button>
+                                    <button>
+                                        <FaUserXmark className="text-red-400 text-3xl"/>
+                                    </button>
+                                </td>
+
+                                
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
 
-            {/* Modal */}
+            <div className="flex justify-between items-center mt-4">
+                <button
+                    onClick={handlePrevious}
+                    disabled={currentPage === 1}
+                    className="px-4 py-1 w-32 rounded-md bg-[#0042fd] text-white rounded hover:bg-[#4070f4] disabled:bg-blue-500"
+                >
+                    Previous
+                </button>
+                <span className="text-gray-700">
+                    Page {currentPage} of {totalPages}
+                </span>
+                <button
+                    onClick={handleNext}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-1 w-32  rounded-md bg-[#0042fd] text-white rounded hover:bg-[#4070f4] disabled:bg-blue-500"
+                >
+                    Next
+                </button>
+            </div>
+
             {isModalOpen && <UserModal isOpen={isModalOpen} closeModal={closeModal} user={selectedUser} />}
         </div>
     );

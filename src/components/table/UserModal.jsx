@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 
-// Sana formatlash funksiyasi
 
 
 const UserModal = ({ user, closeModal }) => {
@@ -14,10 +13,7 @@ const UserModal = ({ user, closeModal }) => {
       }
     };
 
-    // Add event listener for clicks outside the modal
     document.addEventListener('mousedown', handleClickOutside);
-
-    // Cleanup the event listener on component unmount
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -25,7 +21,6 @@ const UserModal = ({ user, closeModal }) => {
 
   if (!user) return null;
 
-  // Sana formatlash
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = String(date.getDate()); // Kun

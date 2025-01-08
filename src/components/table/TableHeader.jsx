@@ -3,7 +3,7 @@ import { MdFilterList, MdAdd } from "react-icons/md";
 import { IoSearchOutline } from "react-icons/io5";
 import { navigate, useNavigate } from "react-router-dom";
 
-const TableHeader = ({ searchTerm, setSearchTerm, openInput }) => {
+const TableHeader = ({ searchTerm, setSearchTerm,  }) => {
   const navigate = useNavigate();
 
   
@@ -16,7 +16,7 @@ const TableHeader = ({ searchTerm, setSearchTerm, openInput }) => {
         </button>
         <button
           className="flex gap-4 px-4 py-2 rounded-lg bg-[#0042fd] text-white border-gray-400 cursor-pointer"
-          onClick={()=> navigate("/adduser")}
+          onClick={()=> navigate("/addUser")}
         >
           <MdAdd className="text-2xl" />
           <p>Add Users</p>

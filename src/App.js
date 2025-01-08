@@ -13,13 +13,15 @@ function App() {
       {/* Yon panel */}
       <Sidebar />
       {/* Asosiy kontent */}
-      <div className="flex-1 bg-[#f4f4f8] min-h-screen">
+      <div className="flex-1 bg-[#f4f4f8] h-[100vh]">
         {/* Header */}
         <HeaderNav />
         <div className="p-6">        
               <Routes>
                 <Route path="/" element = {<HomePage/>} />  
                 <Route path="/adduser" element = {<AddUserPage/>}/>
+                <Route path="/adduser" element = {<editPage/>}/>
+
               </Routes>  
         </div>
       </div>

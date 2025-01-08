@@ -48,8 +48,8 @@ const Dashboard = () => {
     }, [API_URL]);
     return (
         <div className="">
-            <div className="max-w-[1100px] w-[90%] mx-auto flex p-4 justify-between gap-4">
-                <div className="bg-red-400 flex-col  text-white rounded-xl border-2 h-24 py-3 items-center px-4  w-72">
+            <div className="max-w-[1100px] w-[90%] mx-auto flex px-4  justify-between gap-4">
+                <div className="bg-red-400 flex-col  text-white rounded-xl border-2 h-[90px] py-3 items-center px-4  w-72">
                     <div className="text-2xl  gap-1 items-center flex mx-auto text my-auto">
                     <MdOutlineAttachMoney /> <p>Jami pul</p>
                     </div>
@@ -58,7 +58,7 @@ const Dashboard = () => {
                         <p key={index}>{item.sum} so'm</p>
                     ))}
                 </div>
-                <div className="bg-blue-500 text-white rounded-xl border-2 h-24 py-3 items-center px-4  w-72">
+                <div className="bg-blue-500 text-white rounded-xl border-2 h-[90px] py-3 items-center px-4  w-72">
                 <div className="text-2xl gap-1 items-center flex mx-auto text my-auto">
                     <MdOutlinePayments /> <p>Bosh to'lov</p>
                     </div>
@@ -67,7 +67,7 @@ const Dashboard = () => {
                         <p key={index}>{item.sum}  so'm</p>
                     ))}
                 </div>
-                <div className="bg-green-500 text-white rounded-xl border-2  h-24 py-3 items-center px-4  w-72">
+                <div className="bg-green-500 text-white rounded-xl border-2  h-[90px] py-3 items-center px-4  w-72">
                 <div className="text-2xl gap-1 items-center flex mx-auto text my-auto">
                     <FiCheckCircle /> <p>Oylik to'lov</p>
                     </div>
@@ -76,7 +76,7 @@ const Dashboard = () => {
                         <p key={index}>{item.sum}  so'm</p>
                     ))}
                 </div>
-                <div className="bg-orange-400 text-white rounded-xl border-2 border-gray-200  h-24 py-3 items-center px-4  w-72">
+                <div className="bg-orange-400 text-white rounded-xl border-2 border-gray-200  h-[90px] py-3 items-center px-4  w-72">
                 <div className="text-2xl gap-1 items-center flex mx-auto text my-auto">
                     <MdPeopleAlt /> <p>To'laganlar</p>
                     </div>
