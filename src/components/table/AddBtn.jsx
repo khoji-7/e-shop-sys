@@ -16,11 +16,11 @@ const AddBtn = () => {
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
 
-  const handleDateChange = (e) => {
-    const inputDate = new Date(e.target.value);
-    const formattedDate = inputDate.toLocaleDateString("uz-UZ"); // kk.oo.yyyy formatida
-    setGivenDay(formattedDate);
-  };
+  // const handleDateChange = (e) => {
+  //   const inputDate = new Date(e.target.value);
+  //   const formattedDate = inputDate.toLocaleDateString("uz-UZ"); // kk.oo.yyyy formatida
+  //   setGivenDay(formattedDate);
+  // };
 
   const postMethod = async (e) => {
     e.preventDefault();
@@ -153,7 +153,8 @@ const AddBtn = () => {
           <input
             type="date"
             className="p-2 border-2 rounded-lg"
-            onChange={handleDateChange}
+            onChange={(e)=> setGivenDay(e.target.value)
+            }
           />
         </div>
         <div className="flex w-[400px] justify-between gap-2 py-2 px-4 items-center">

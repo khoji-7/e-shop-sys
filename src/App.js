@@ -4,6 +4,7 @@ import HeaderNav from './components/navbar/Navbar.jsx';
 import { Routes, Route} from 'react-router-dom';
 import HomePage from './pages/Home/homePage.jsx';
 import AddUserPage from './pages/addUserPage/AddUserPage.jsx';
+import CollectorPage from './pages/Collector/CollectorPage.jsx';
 
 function App() {
  
@@ -21,6 +22,7 @@ function App() {
                 <Route path="/" element = {<HomePage/>} />  
                 <Route path="/adduser" element = {<AddUserPage/>}/>
                 <Route path="/adduser" element = {<editPage/>}/>
+                <Route path="/collector" element = {<CollectorPage/>}/>
 
               </Routes>  
         </div>

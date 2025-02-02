@@ -19,7 +19,7 @@ const Table = () => {
             .then((response) => response.json())
             .then((item) => {
                 setData(item);
-                console.log("Fetched data:", item);
+                
             })
             .catch((error) => console.error("Error:", error));
     }, [API_URL]);
@@ -76,8 +76,8 @@ const Table = () => {
                 openModal={openModal}
             />
 
-            <div className="mt-5">
-                <table className="w-full border-[1px] border-gray-400 h-[350px] overflow-y-scroll">
+            <div className="mt-5 h-[420px] overflow-y-scroll">
+                <table className="w-full border-[1px] border-gray-400 h-[350px] ">
                     <thead className="bg-[#f9fafb] rounded-t-md border-2 border-gray-300">
                         <tr>
                             <th className="py-2 px-5 text-gray-600 font-medium text-[16px]">Id</th>
@@ -102,13 +102,13 @@ const Table = () => {
                                 >
                                     {item?.name}
                                 </td>
-                                <td className="px-5 py-1">{item?.product_name}</td>
+                                <td className="px-5 py-1 ">{item?.product_name}</td>
                                 <td className="px-5 py-1">{item?.cost} so'm</td>
                                 <td className="px-5 py-1">{item?.phone_number}</td>
                                 <td className="px-5 py-1">{formatDate(item?.given_day)}</td>
                                 <td className="px-5 py-1">{item?.monthly_income} so'm</td>
                                 <td className="px-5 py-1">{item?.payment} so'm</td>
-                                <td className="px-2 py-3 flex items-center justify-between ">
+                                <td className="px-2 py-4 flex items-center justify-between ">
                                     <button  >
                                        <MdEditSquare className="text-[#4070f4] text-3xl"/>
                                     </button>
