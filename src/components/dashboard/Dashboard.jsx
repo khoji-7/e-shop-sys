@@ -31,7 +31,7 @@ const Dashboard = () => {
     }, [API_URL]);
 
     useEffect(() => {
-        fetch(`${API_URL}/main/month`)
+        fetch(`${API_URL}/main/today`)
         .then((response) => response.json())
         .then((item) => {
             setPayUser(item.count);
@@ -64,7 +64,7 @@ const Dashboard = () => {
                     <CgDanger /> <p>To'lamaganlar</p>
                     </div>
                     <p>
-                        {headPay} kishi to'lamadi
+                        {headPay}/{allMoney?.income_users_count?.count} kishi to'lamadi
                     </p>
                 </div>
                 <div className="bg-green-500 text-white rounded-xl border-2  h-[90px] py-3 items-center px-4  w-72">
@@ -78,7 +78,7 @@ const Dashboard = () => {
                 </div>
                 <div className="bg-orange-400 text-white rounded-xl border-2 border-gray-200  h-[90px] py-3 items-center px-4  w-72">
                 <div className="text-2xl gap-1 items-center flex mx-auto text my-auto">
-                    <MdPeopleAlt /> <p>To'laganlar</p>
+                    <MdPeopleAlt /> <p>Bugungi to'lov</p>
                     </div>
 
                     <p>{payUser} kishi to'ladi</p>
