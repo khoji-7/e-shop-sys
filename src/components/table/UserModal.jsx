@@ -82,7 +82,7 @@ const UserModal = ({ user, closeModal }) => {
               </tr>
               <tr>
                 <td className="py-2 px-4">Manzili</td>
-                <td className="py-2 px-4">{user.address}</td>
+                <td className="py-2 px-4">{user.zone}</td>
               </tr>
               <tr>
                 <td className="py-2 px-4">Berilgan vaqti</td>
