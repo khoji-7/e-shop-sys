@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { data, useNavigate } from "react-router-dom";
 
 const AddBtn = () => {
   const [givenDay, setGivenDay] = useState("");
@@ -11,14 +11,18 @@ const AddBtn = () => {
   const [zone, setZone] = useState("");
   const [workplace, setWorkplace] = useState("");
   const [time, setTime] = useState();
-  const [primaryPayment, setPrimaryPayment] = useState();
   const [passportSeries, setPassportSeries] = useState("");
   const [description, setDescription] = useState("");
-  const [seller, setSeller] = useState(""); // New seller field
-  const [collector, setCollector] = useState(""); // New collector field
+  const [seller, setSeller] = useState("");
+  const [collector, setCollector] = useState(""); 
   const navigate = useNavigate();
+  const [daaata, setDataa] =useState()
+
 
   const API_URL = process.env.REACT_APP_API_URL;
+
+ 
+
 
   const postMethod = async (e) => {
     e.preventDefault();
@@ -42,7 +46,6 @@ const AddBtn = () => {
       zone,
       workplace,
       time: formattedTime,
-      primary_payment: primaryPayment,
       passport_series: passportSeries,
       description,
       given_day: formattedGivenDay,
@@ -157,15 +160,7 @@ const AddBtn = () => {
           />
         </div>
 
-        <div className="flex justify-between py-2 px-4 items-center">
-          <p className="text-xl">Bosh to'lov</p>
-          <input
-            type="number"
-            className="p-2 border-2 rounded-lg"
-            value={primaryPayment}
-            onChange={(e) => setPrimaryPayment(Number(e.target.value))}
-          />
-        </div>
+       
 
         <div className="flex justify-between py-2 px-4 items-center">
           <p className="text-xl">Berilgan Vaqti</p>

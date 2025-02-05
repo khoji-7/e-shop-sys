@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
+import UserModal from "../table/UserModal";
+
 
 const PaymentList = ({ type, users, onClose }) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+
     const titles = {
         notPaid: "To'lamaganlar Ro'yxati",
         todayPaid: "Bugun To'laganlar Ro'yxati",
         monthPaid: "Bu Oy To'laganlar Ro'yxati"
+    };
+    const openModal = (user) => {
+        setSelectedUser(user);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedUser(null);
     };
 
     return (
@@ -26,7 +40,7 @@ const PaymentList = ({ type, users, onClose }) => {
                             {users.map((item) => (
                                 <tr key={item.id} className="border-2 border-gray-200 h-16 text-gray-500">
                                     <td className="px-5 py-1">{item.id}</td>
-                                    <td className="px-5 py-1">{item.name}</td>
+                                    <td className="px-5 py-1 cursor-pointer" onClick={()=>openModal(item)}>{item.name}</td>
                                     <td className="px-5 py-1">{item.product_name}</td>
                                     <td className="px-5 py-1">{item.cost}</td>
                                     <td className="px-5 py-1">{new Date(item.given_day).toLocaleString("en-GB")}</td>
@@ -43,6 +57,8 @@ const PaymentList = ({ type, users, onClose }) => {
                     Yopish
                 </button>
             </div>
+            {isModalOpen && <UserModal user={selectedUser} closeModal={closeModal} />}
+
         </div>
     );
 };

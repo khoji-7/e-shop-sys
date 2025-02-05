@@ -2,6 +2,8 @@ import React from "react";
 import { MdDashboard } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { RiAdminLine } from "react-icons/ri";
+import { FaLocationDot } from "react-icons/fa6";
+
 
 const Sidebar = () => {
     const navigate = useNavigate();
@@ -21,6 +23,12 @@ const Sidebar = () => {
                     <RiAdminLine/>
                     <p className="">
                         Collector
+                    </p>
+                </div>
+                <div className="pt-4 flex items-center gap-5 cursor-pointer "  onClick={()=> navigate("/zone")} >
+                    <FaLocationDot/>
+                    <p className="">
+                        Zone
                     </p>
                 </div>
                 

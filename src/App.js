@@ -5,6 +5,7 @@ import { Routes, Route} from 'react-router-dom';
 import HomePage from './pages/Home/homePage.jsx';
 import AddUserPage from './pages/addUserPage/AddUserPage.jsx';
 import CollectorPage from './pages/Collector/CollectorPage.jsx';
+import ZonePage from './pages/zone/zonePage.jsx';
 
 function App() {
  
@@ -23,7 +24,7 @@ function App() {
                 <Route path="/adduser" element = {<AddUserPage/>}/>
                 <Route path="/adduser" element = {<editPage/>}/>
                 <Route path="/collector" element = {<CollectorPage/>}/>
-
+                <Route path="/zone" element = {<ZonePage/>}/>
               </Routes>  
         </div>
       </div>
