@@ -193,7 +193,7 @@ const AddBtn = () => {
         </div>
 
         <div className="flex justify-between py-2 px-4 items-center">
-          <p className="text-xl">Seller</p>
+          <p className="text-xl">Sotuvchi</p>
           <input
             type="text"
             className="p-2 border-2 rounded-lg"
@@ -203,7 +203,7 @@ const AddBtn = () => {
         </div>
 
         <div className="flex justify-between py-2 px-4 items-center">
-          <p className="text-xl">Collector</p>
+          <p className="text-xl">Yig'uvchi</p>
           <input
             type="text"
             className="p-2 border-2 rounded-lg"

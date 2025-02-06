@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import UserModal from "../table/UserModal";
-
+import React, { useState } from 'react';
+import UserModal from '../table/UserModal';
 
 const PaymentList = ({ type, users, onClose }) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    console.log('Users:', users);
+
     const [selectedUser, setSelectedUser] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const titles = {
         notPaid: "To'lamaganlar Ro'yxati",
@@ -15,11 +16,14 @@ const PaymentList = ({ type, users, onClose }) => {
         setSelectedUser(user);
         setIsModalOpen(true);
     };
+    
 
+    // Close user details modal
     const closeModal = () => {
         setIsModalOpen(false);
         setSelectedUser(null);
     };
+    const paymentData = Array.isArray(users) ? users.flat() : [];
 
     return (
         <div className="fixed inset-0 bg-black/70 bg-opacity-50 backdrop-blur-md flex justify-center items-center">
@@ -37,28 +41,31 @@ const PaymentList = ({ type, users, onClose }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map((item) => (
-                                <tr key={item.id} className="border-2 border-gray-200 h-16 text-gray-500">
-                                    <td className="px-5 py-1">{item.id}</td>
-                                    <td className="px-5 py-1 cursor-pointer" onClick={()=>openModal(item)}>{item.name}</td>
-                                    <td className="px-5 py-1">{item.product_name}</td>
-                                    <td className="px-5 py-1">{item.cost}</td>
-                                    <td className="px-5 py-1">{new Date(item.given_day).toLocaleString("en-GB")}</td>
-                                    <td className="px-5 py-1">{item.time} oy</td>
-                                    <td className="px-5 py-1">{item.description}</td>
-                                    <td className="px-5 py-1">{item.phone_number}</td>
-                                    <td className="px-5 py-1">{item.collector}</td>
+                            {paymentData?.length > 0 ? (
+                                paymentData.map((user) => (
+                                    <tr key={user?.id} className="border-2 border-gray-200 h-16 text-gray-500">
+                                        <td className="px-5 py-1">{user?.id}</td>
+                                        <td className="px-5 py-1 cursor-pointer" onClick={() => openModal(user)} >{user?.name || 'Noma\'lum'}</td>
+                                        <td className="px-5 py-1">{user?.product_name || 'Noma\'lum'}</td>
+                                        <td className="px-5 py-1">{user?.cost || 'Noma\'lum'}</td>
+                                        <td className="px-5 py-1">{user?.given_day ? new Date(user.given_day).toLocaleString("en-GB") : 'Noma\'lum'}</td>
+                                        <td className="px-5 py-1">{user?.time || 'Noma\'lum'}</td>
+                                        <td className="px-5 py-1">{user?.description || 'Noma\'lum'}</td>
+                                        <td className="px-5 py-1">{user?.phone_number || 'Noma\'lum'}</td>
+                                        <td className="px-5 py-1">{user?.collector || 'Noma\'lum'}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="9" className="text-center py-4">Ma'lumotlar mavjud emas</td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>
-                <button onClick={onClose} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
-                    Yopish
-                </button>
+                <button onClick={onClose} className="mt-4 py-2 px-4 bg-red-600 text-white rounded-lg">Yopish</button>
             </div>
             {isModalOpen && <UserModal user={selectedUser} closeModal={closeModal} />}
-
         </div>
     );
 };

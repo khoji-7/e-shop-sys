@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from "react";
-import {MdOutlineAttachMoney, MdPeopleAlt} from "react-icons/md";
-import {CgDanger} from "react-icons/cg";
-import {FiCheckCircle} from "react-icons/fi";
+import React, { useEffect, useState } from "react";
+import { MdOutlineAttachMoney, MdPeopleAlt } from "react-icons/md";
+import { CgDanger } from "react-icons/cg";
+import { FiCheckCircle } from "react-icons/fi";
 import PaymentList from "./NotPay";
+
 const Dashboard = () => {
     const [stats, setStats] = useState({
         allMoney: {},
@@ -25,7 +26,11 @@ const Dashboard = () => {
             fetch(`${API_URL}/main/month`).then((res) => res.json()),
         ])
         .then(([allMoney, notPaid, today, month]) => {
-           
+            console.log("Jami pul:", allMoney);
+            console.log("To'lamaganlar:", notPaid);
+            console.log("Bugun to'laganlar:", today);
+            console.log("Bu oy to'laganlar:", month);
+
             setStats({
                 allMoney,
                 headPay: notPaid || 0,
@@ -36,9 +41,8 @@ const Dashboard = () => {
                 monthPaidUsers: month.result || [],
             });
         })
-        .catch((error) => console.error("Error:", error));
+        .catch((error) => console.error("Xatolik:", error));
     }, [API_URL]);
-    
 
     return (
         <div className="max-w-[1100px] w-[90%] mx-auto flex px-4 justify-between gap-4">
@@ -54,7 +58,7 @@ const Dashboard = () => {
                 title="To'lamaganlar"
                 value={`${stats.headPay?.count}/${stats.allMoney?.income_users_count?.count || 0} kishi  ${stats?.headPay.sum} so'm`}
                 onClick={() =>
-                    setModalData({type: "notPaid", title: "To'lamaganlar Ro'yxati", users: stats.notPaidUsers})
+                    setModalData({ type: "notPaid", title: "To'lamaganlar Ro'yxati", users: stats.notPaidUsers })
                 }
                 clickable
             />
@@ -64,7 +68,7 @@ const Dashboard = () => {
                 title="Oylik to'lov"
                 value={`${stats.monthPay?.count} kishi ${stats?.monthPay.sum} so'm`}
                 onClick={() =>
-                    setModalData({type: "monthPaid", title: "Bu oy to'laganlar", users: stats.monthPaidUsers})
+                    setModalData({ type: "monthPaid", title: "Bu oy to'laganlar", users: stats.monthPaidUsers })
                 }
                 clickable
             />
@@ -74,7 +78,7 @@ const Dashboard = () => {
                 title="Bugungi to'lov"
                 value={`${stats.payUser?.count} kishi ${stats?.payUser.sum} so'm`}
                 onClick={() =>
-                    setModalData({type: "todayPaid", title: "Bugun to'laganlar", users: stats.todayPaidUsers})
+                    setModalData({ type: "todayPaid", title: "Bugun to'laganlar", users: stats.todayPaidUsers })
                 }
                 clickable
             />
@@ -91,7 +95,7 @@ const Dashboard = () => {
     );
 };
 
-const StatCard = ({icon, color, title, value, onClick, clickable}) => (
+const StatCard = ({ icon, color, title, value, onClick, clickable }) => (
     <div
         className={`${color} text-white rounded-xl border-2 h-[90px] py-3 items-center px-4 w-80 ${
             clickable ? "cursor-pointer" : ""
