@@ -6,7 +6,7 @@ import HomePage from './pages/Home/homePage.jsx';
 import AddUserPage from './pages/addUserPage/AddUserPage.jsx';
 import CollectorPage from './pages/Collector/CollectorPage.jsx';
 import ZonePage from './pages/zone/zonePage.jsx';
-
+import CollectorMoney from './pages/Collector/CollectorMoney.jsx';
 function App() {
  
 
@@ -18,13 +18,15 @@ function App() {
       <div className="flex-1 bg-[#f4f4f8] h-[100vh]">
         {/* Header */}
         <HeaderNav />
-        <div className="p-6">        
+        <div className="p-4">        
               <Routes>
                 <Route path="/" element = {<HomePage/>} />  
                 <Route path="/adduser" element = {<AddUserPage/>}/>
                 <Route path="/adduser" element = {<editPage/>}/>
                 <Route path="/collector" element = {<CollectorPage/>}/>
                 <Route path="/zone" element = {<ZonePage/>}/>
+                <Route path="/collectormoney" element = {<CollectorMoney/>}/>
+
               </Routes>  
         </div>
       </div>

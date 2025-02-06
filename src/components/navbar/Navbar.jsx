@@ -3,7 +3,7 @@ import img from "../../assets/img.jpg"
 
 const HeaderNav = () => {
     return (
-        <header className="flex items-center justify-between px-6 py-4 w-full  bg-white mx-auto">
+        <header className="flex items-center justify-between px-6 py-3 w-full  bg-white mx-auto">
             <div className="flex items-center gap-2">
                 <h1 className="text-2xl font-bold">CreditiOn</h1>
             </div>

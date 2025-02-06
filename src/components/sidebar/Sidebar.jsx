@@ -3,6 +3,8 @@ import { MdDashboard } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { RiAdminLine } from "react-icons/ri";
 import { FaLocationDot } from "react-icons/fa6";
+import { TbUserDollar } from "react-icons/tb";
+
 
 
 const Sidebar = () => {
@@ -29,6 +31,12 @@ const Sidebar = () => {
                     <FaLocationDot/>
                     <p className="">
                         Zone
+                    </p>
+                </div>
+                <div className="pt-4 flex items-center gap-5 cursor-pointer "  onClick={()=> navigate("/collectormoney")} >
+                    <TbUserDollar/>
+                    <p className="">
+                        Yig'uvchilar 
                     </p>
                 </div>
                 

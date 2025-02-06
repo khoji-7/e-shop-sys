@@ -188,7 +188,7 @@ const Table = () => {
                 </table>
             </div>
 
-            <div className="flex justify-between items-center mt-1">
+            <div className="flex justify-between items-center mt-2">
                 <button
                     onClick={handlePreviousPage}
                     disabled={currentPage === 1}
