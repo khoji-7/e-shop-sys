@@ -50,13 +50,13 @@ const UserModal = ({ user, closeModal }) => {
   const paymentStatusColor = user.payment_status ? "text-green-500" : "text-red-500";
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+    <div className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-black/30 z-50 max-h-full  transition-all">
       <div
         ref={modalRef}
-        className="bg-white p-6 rounded-lg w-4/5 max-w-4xl overflow-auto"
+        className="bg-white p-6 h-[90vh] rounded-lg w-4/5 max-w-4xl overflow-y-scroll transition-all" 
       >
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold">User Details</h2>
+          <h2 className="text-xl font-semibold">Mijoz Malumotlari</h2>
         </div>
 
         <div className="mt-4">
@@ -150,9 +150,9 @@ const UserModal = ({ user, closeModal }) => {
         <div className="flex justify-end mt-6">
           <button
             onClick={closeModal}
-            className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+            className="mt-4 py-2 px-4 bg-red-600 text-white rounded-lg"
           >
-            Close
+            Yopish
           </button>
         </div>
       </div>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { MdEditSquare } from "react-icons/md";
-import { FaUserXmark } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 
 const Collector = () => {
@@ -60,10 +59,11 @@ const Collector = () => {
     }
   };
 
-  // ------------- collectorni edit
   const handleEdit = async (e) => {
     e.preventDefault();
-    if (!editingCollector) return;
+    if (!editingCollector || !editingCollector.id) return;
+
+    console.log("Editing collector ID:", editingCollector.id);
 
     const updatedCollector = {
       collector_name: collector.name,
@@ -80,6 +80,8 @@ const Collector = () => {
       if (response.ok) {
         fetchCollectors();
         toggleModal();
+      } else {
+        console.error("Error updating collector:", await response.text());
       }
     } catch (error) {
       console.error("Error editing collector:", error);
@@ -88,12 +90,11 @@ const Collector = () => {
 
   return (
     <div className="bg-[#f4f4f8] max-w-[1100px] w-[95%] mx-auto mt-4 h-[500px]">
-         <button className="px-4 py-2 bg-blue-500 text-white rounded-lg mb-2" onClick={() => toggleModal("add")}>
-          Add Collector
-        </button>
+      <button className="px-4 py-2 bg-blue-500 text-white rounded-lg mb-2" onClick={() => toggleModal("add")}>
+        Add Collector
+      </button>
 
       <div className="mt-5 h-[550px] overflow-y-scroll">
-       
         <table className="w-full border border-gray-400 h-[550px]">
           <thead className="bg-[#f9fafb] border-2 border-gray-300">
             <tr>
@@ -105,7 +106,7 @@ const Collector = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((item,index) => (
+            {data.map((item, index) => (
               <tr key={item.id} className="border-2 border-gray-200 h-16">
                 <td className="px-5 py-1 text-gray-500">{item.id}</td>
                 <td className="px-5 py-1 text-gray-500">{item.collector_name}</td>
@@ -115,7 +116,6 @@ const Collector = () => {
                   <button onClick={() => toggleModal("edit", item)}>
                     <MdEditSquare className="text-[#4070f4] text-3xl" />
                   </button>
-                  
                 </td>
               </tr>
             ))}
