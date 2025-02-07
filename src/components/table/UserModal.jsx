@@ -95,10 +95,7 @@ const UserModal = ({ user, closeModal }) => {
                 <td className="py-2 px-6 text-gray-700">Berilgan vaqti</td>
                 <td className="py-2 px-6 text-gray-900">{givenDayFormatted}</td>
               </tr>
-              <tr className="bg-gray-100">
-                <td className="py-2 px-6 text-gray-700">To'lov muddati kungacha</td>
-                <td className="py-2 px-6 text-gray-900">{updatedAtFormatted}</td>
-              </tr>
+              
               <tr>
                 <td className="py-2 px-6 text-gray-700">Ish joyi</td>
                 <td className="py-2 px-6 text-gray-900">{user.workplace}</td>

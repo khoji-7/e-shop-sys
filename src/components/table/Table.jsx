@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import TableHeader from "./TableHeader";
 import UserModal from "./UserModal";
 import UserEditModal from "./UserEdit";
-import PaymentModal from "./Payment"; // New component for payment modal
+import PaymentModal from "./Payment";
 import { MdEditSquare } from "react-icons/md";
 import { FaUserXmark } from "react-icons/fa6";
-import { FaMoneyCheckAlt } from "react-icons/fa"; // Icon for payment button
+import { FaMoneyCheckAlt } from "react-icons/fa";
 
 const Table = () => {
     const [data, setData] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false); // State for payment modal
+    const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -19,7 +19,6 @@ const Table = () => {
 
     const API_URL = process.env.REACT_APP_API_URL;
 
-    // Fetch data from the API
     useEffect(() => {
         fetch(`${API_URL}/users?page=${currentPage}`)
             .then((response) => response.json())
@@ -27,50 +26,45 @@ const Table = () => {
             .catch((error) => console.error("Error:", error));
     }, [API_URL, currentPage]);
 
-    // Open user details modal
     const openModal = (user) => {
         setSelectedUser(user);
         setIsModalOpen(true);
     };
-    
 
-    // Close user details modal
     const closeModal = () => {
         setIsModalOpen(false);
         setSelectedUser(null);
     };
 
-    // Open edit modal
     const openEditModal = (user) => {
         setSelectedUser(user);
         setIsEditModalOpen(true);
     };
 
-    // Close edit modal
     const closeEditModal = () => {
         setIsEditModalOpen(false);
         setSelectedUser(null);
     };
 
-    // Open payment modal
     const openPaymentModal = (user) => {
         setSelectedUser(user);
         setIsPaymentModalOpen(true);
     };
 
-    // Close payment modal
     const closePaymentModal = () => {
         setIsPaymentModalOpen(false);
         setSelectedUser(null);
     };
 
-    // Handle user deletion
-    const handleDelete = async (id) => {
+    const handleDelete = async (user) => {
+        const confirmDelete = window.confirm(`${user.name} ni o'chirmoqchimisiz?`);
+        if (!confirmDelete) return;
+
         try {
-            const response = await fetch(`${API_URL}/users/delete/${id}`, { method: "DELETE" });
+            const response = await fetch(`${API_URL}/users/delete/${user.id}`, { method: "DELETE" });
 
             if (response.ok) {
-                setData((prevData) => prevData.filter((user) => user.id !== id));
+                setData((prevData) => prevData.filter((u) => u.id !== user.id));
             } else {
                 console.error("Xatolik yuz berdi!");
             }
@@ -79,7 +73,6 @@ const Table = () => {
         }
     };
 
-    // Update user data
     const updateUser = (updatedUser) => {
         setData((prevData) => prevData.map((user) => (user.id === updatedUser.id ? updatedUser : user)));
     };
@@ -93,20 +86,18 @@ const Table = () => {
                 },
                 body: JSON.stringify(paymentData),
             });
-    
+
             if (response.ok) {
                 alert("To'lov muvaffaqiyatli amalga oshirildi!");
                 closePaymentModal();
             } else {
                 alert("Xatolik");
-                console.log("To'lovda xatolik yuz berdi");
             }
         } catch (error) {
             console.error("Xatolik:", error);
         }
     };
-    
-    // Filter data based on search term
+
     const searchData =
         searchTerm.length >= 3
             ? data.filter(
@@ -119,25 +110,19 @@ const Table = () => {
     const totalItems = searchData.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-    // Paginate data
     const paginatedData = searchData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-    // Handle next page
     const handleNextPage = () => {
         if (currentPage < totalPages) {
             setCurrentPage((prev) => prev + 1);
         }
     };
 
-    // Handle previous page
     const handlePreviousPage = () => {
         if (currentPage > 1) {
             setCurrentPage((prev) => prev - 1);
         }
     };
-
-
-
 
     return (
         <div className="bg-[#f4f4f8] max-w-[1100px] w-[95%] mx-auto mt-4 h-[500px]">
@@ -175,7 +160,7 @@ const Table = () => {
                                     <button onClick={() => openEditModal(item)}>
                                         <MdEditSquare className="text-[#4070f4] text-3xl" />
                                     </button>
-                                    <button onClick={() => handleDelete(item.id)}>
+                                    <button onClick={() => handleDelete(item)}>
                                         <FaUserXmark className="text-red-400 text-3xl" />
                                     </button>
                                     <button onClick={() => openPaymentModal(item)}>
@@ -189,50 +174,20 @@ const Table = () => {
             </div>
 
             <div className="flex justify-between items-center mt-2">
-                <button
-                    onClick={handlePreviousPage}
-                    disabled={currentPage === 1}
-                    className={`px-4 py-2 ${
-                        currentPage === 1
-                            ? "text-white cursor-not-allowed bg-blue-400 rounded-md"
-                            : "text-white bg-blue-600 rounded-md"
-                    }`}
-                >
+                <button onClick={handlePreviousPage} disabled={currentPage === 1} className="px-4 py-2 bg-blue-600 text-white rounded-md">
                     Previous
                 </button>
                 <span className="text-gray-600">
                     Page {currentPage} of {totalPages}
                 </span>
-                <button
-                    onClick={handleNextPage}
-                    disabled={currentPage === totalPages}
-                    className={`px-4 py-2 ${
-                        currentPage === totalPages
-                            ? "text-white cursor-not-allowed bg-blue-400 rounded-md"
-                            : "text-white bg-blue-600 rounded-md"
-                    }`}
-                >
+                <button onClick={handleNextPage} disabled={currentPage === totalPages} className="px-4 py-2 bg-blue-600 text-white rounded-md">
                     Next
                 </button>
             </div>
 
             {isModalOpen && <UserModal user={selectedUser} closeModal={closeModal} />}
-
-            <UserEditModal
-                isOpen={isEditModalOpen}
-                closeModal={closeEditModal}
-                user={selectedUser}
-                updateUser={updateUser}
-            />
-
-            {/* Payment Modal */}
-            {isPaymentModalOpen && (
-                <PaymentModal
-                    isOpen={isPaymentModalOpen}
-                    closeModal={closePaymentModal}
-                    handlePayment={handlePayment}
-                />
-            )}
+            <UserEditModal isOpen={isEditModalOpen} closeModal={closeEditModal} user={selectedUser} updateUser={updateUser} />
+            {isPaymentModalOpen && <PaymentModal isOpen={isPaymentModalOpen} closeModal={closePaymentModal} handlePayment={handlePayment} />}
         </div>
     );
 };

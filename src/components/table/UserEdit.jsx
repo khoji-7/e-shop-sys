@@ -17,9 +17,39 @@ const UserEditModal = ({ isOpen, closeModal, user, updateUser }) => {
         given_day: "",
     });
 
+    const [collectors, setCollectors] = useState([]);
+    const [zones, setZones] = useState([]);
     const API_URL = process.env.REACT_APP_API_URL;
+    
+    useEffect(() => {
+        if (!API_URL) {
+            console.error("API URL aniqlanmagan! Iltimos, .env faylni tekshiring.");
+            return;
+        }
+        fetchCollectors();
+        fetchZones();
+    }, []);
 
-    // Agar user mavjud bo‘lsa, formData ni yangilash
+    const fetchZones = async () => {
+        try {
+            const response = await fetch(`${API_URL}/zones`);
+            const result = await response.json();
+            setZones(result);
+        } catch (error) {
+            console.error("Error fetching zones:", error);
+        }
+    };
+
+    const fetchCollectors = async () => {
+        try {
+            const response = await fetch(`${API_URL}/collector`);
+            const result = await response.json();
+            setCollectors(result);
+        } catch (error) {
+            console.error("Error fetching collectors:", error);
+        }
+    };
+
     useEffect(() => {
         if (user) {
             setFormData(user);
@@ -61,21 +91,19 @@ const UserEditModal = ({ isOpen, closeModal, user, updateUser }) => {
         { name: "phone_number2", label: "Qo‘shimcha telefon raqam", type: "text" },
         { name: "workplace", label: "Ish joyi", type: "text" },
         { name: "time", label: "Vaqt", type: "datetime-local" },
-        { name: "zone", label: "Hudud", type: "text" },
         { name: "seller", label: "Sotuvchi", type: "text" },
-        { name: "collector", label: "Yig‘uvchi", type: "text" },
         { name: "passport_series", label: "Pasport seriyasi", type: "text" },
         { name: "description", label: "Izoh", type: "text" },
         { name: "given_day", label: "Berilgan sana", type: "datetime-local" },
     ];
 
-    if (!isOpen || !user) return null; // user null bo‘lsa, hech narsa return qilmaymiz
+    if (!isOpen || !user) return null;
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black backdrop-blur-md bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg  max-w-[80%] ">
+            <div className="bg-white p-6 rounded-lg max-w-[80%]">
                 <h2 className="text-xl font-bold mb-4 text-center">Foydalanuvchini tahrirlash</h2>
-                <form onSubmit={handleSubmit} className="w-80%  grid grid-cols-2  gap-3  items-end ">
+                <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-3 items-end">
                     {fields.map((field) => (
                         <div key={field.name} className="flex flex-col">
                             <label className="font-medium">{field.label}</label>
@@ -89,13 +117,27 @@ const UserEditModal = ({ isOpen, closeModal, user, updateUser }) => {
                             />
                         </div>
                     ))}
-                    <button type="submit" className="px-4 py-1 bg-blue-500 text-white  w-40 rounded-md h-10">
-                        Saqlash
-                    </button>
+                    <div className="flex flex-col">
+                        <label className="font-medium">Hudud</label>
+                        <select name="zone" value={formData.zone} onChange={handleChange} className="w-72 px-4 py-2 border rounded-md">
+                            <option value="">Tanlang</option>
+                            {zones.map((zone) => (
+                                <option key={zone?.id} value={zone?.zone_name}>{zone?.zone_name}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="font-medium">Yig‘uvchi</label>
+                        <select name="collector" value={formData.collector} onChange={handleChange} className="w-72 px-4 py-2 border rounded-md">
+                            <option value="">Tanlang</option>
+                            {collectors.map((collector) => (
+                                <option key={collector?.id} value={collector?.collector_name}>{collector?.collector_name}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <button type="submit" className="px-4 py-1 bg-blue-500 text-white w-40 rounded-md h-10">Saqlash</button>
                 </form>
-                <button onClick={closeModal} className="mt-2 w-40 bg-gray-500 text-white p-2 rounded-md">
-                    Bekor qilish
-                </button>
+                <button onClick={closeModal} className="mt-2 w-40 bg-gray-500 text-white p-2 rounded-md">Bekor qilish</button>
             </div>
         </div>
     );
