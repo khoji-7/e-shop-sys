@@ -75,6 +75,7 @@ const Table = () => {
 
     const updateUser = (updatedUser) => {
         setData((prevData) => prevData.map((user) => (user.id === updatedUser.id ? updatedUser : user)));
+        window.location.reload(); // Sahifani qayta yuklash
     };
 
     const handlePayment = async (paymentData) => {
@@ -90,6 +91,7 @@ const Table = () => {
             if (response.ok) {
                 alert("To'lov muvaffaqiyatli amalga oshirildi!");
                 closePaymentModal();
+                window.location.reload(); // Sahifani yangilash
             } else {
                 alert("Xatolik");
             }
@@ -134,7 +136,7 @@ const Table = () => {
                         <tr>
                             <th className="py-2 px-5 text-gray-600 font-medium text-[16px]">Id</th>
                             <th className="py-2 px-5 text-gray-600 font-medium text-[16px]">Ismi</th>
-                            <th className="py-2 px-5 text-gray-600 font-medium text-[16px]">Mahsulot nomi</th>
+                            <th className="py-2 px-5 text-gray-600 font-medium text-[16px]">Manzili</th>
                             <th className="py-2 px-5 text-gray-600 font-medium text-[16px]">Narxi</th>
                             <th className="py-2 px-5 text-gray-600 font-medium text-[16px]">Telefon</th>
                             <th className="py-2 px-5 text-gray-600 font-medium text-[16px]">Status</th>
@@ -148,7 +150,7 @@ const Table = () => {
                                 <td className="px-5 py-1 cursor-pointer" onClick={() => openModal(item)}>
                                     {item.name}
                                 </td>
-                                <td className="px-5 py-1">{item.product_name}</td>
+                                <td className="px-5 py-1">{item.zone}</td>
                                 <td className="px-5 py-1">{item.cost} so'm</td>
                                 <td className="px-5 py-1">{item.phone_number}</td>
                                 <td className="px-5 py-1">
@@ -177,9 +179,7 @@ const Table = () => {
                 <button onClick={handlePreviousPage} disabled={currentPage === 1} className="px-4 py-2 bg-blue-600 text-white rounded-md">
                     Previous
                 </button>
-                <span className="text-gray-600">
-                    Page {currentPage} of {totalPages}
-                </span>
+                <span className="text-gray-600">Page {currentPage} of {totalPages}</span>
                 <button onClick={handleNextPage} disabled={currentPage === totalPages} className="px-4 py-2 bg-blue-600 text-white rounded-md">
                     Next
                 </button>

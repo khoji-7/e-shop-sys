@@ -15,11 +15,11 @@ const AddBtn = () => {
     const [description, setDescription] = useState("");
     const [seller, setSeller] = useState("");
     const [collector, setCollector] = useState("");
-    const navigate = useNavigate();
     const [collectors, setCollectors] = useState([]);
     const [zones, setZones] = useState([]);
+    const navigate = useNavigate();
     const API_URL = process.env.REACT_APP_API_URL;
-    
+
     useEffect(() => {
         if (!API_URL) {
             console.error("API URL aniqlanmagan! Iltimos, .env faylni tekshiring.");
@@ -28,21 +28,24 @@ const AddBtn = () => {
         fetchCollectors();
         fetchZones();
     }, []);
-    const fetchZones = () => {
-      fetch(`${API_URL}/zones`)
-          .then((response) => response.json())
-          .then((item) => setZones(item))
-          .catch((error) => console.error("Error:", error));
-  };
 
-  console.log(zones,"dd")
+    const fetchZones = async () => {
+        try {
+            const response = await fetch(`${API_URL}/zones`);
+            const data = await response.json();
+            setZones(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.error("Manzillarni yuklashda xatolik:", error);
+        }
+    };
+
     const fetchCollectors = async () => {
         try {
             const response = await fetch(`${API_URL}/collector`);
-            const result = await response.json();
-            setCollectors(result);
+            const data = await response.json();
+            setCollectors(Array.isArray(data) ? data : []);
         } catch (error) {
-            console.error("Error fetching collectors:", error);
+            console.error("Yig'uvchilarni yuklashda xatolik:", error);
         }
     };
 
@@ -50,31 +53,31 @@ const AddBtn = () => {
         e.preventDefault();
 
         if (!name || !productName || !zone || !collector) {
-            alert("Iltimos, barcha majburiy maydonlarni to'ldiring: Ism, Mahsulot nomi, Manzil va Yig'uvchi.");
+            alert("Iltimos, barcha majburiy maydonlarni to'ldiring.");
             return;
         }
 
-        const formattedTime = time ? new Date(new Date().setMonth(new Date().getMonth() + Number(time))).toISOString() : null;
+        const formattedTime = time ? new Date().setMonth(new Date().getMonth() + Number(time)) : null;
         const formattedGivenDay = givenDay ? new Date(givenDay).toISOString() : null;
 
         const formData = {
             name,
             product_name: productName,
-            cost: cost ? Number(cost) : null,
+            cost: cost || "0",
             phone_number: phoneNumber,
             phone_number2: phoneNumber2,
-            zone,
             workplace,
-            time: formattedTime,
+            time: formattedTime ? new Date(formattedTime).toISOString() : "",
+            zone,
+            seller,
+            collector,
             passport_series: passportSeries,
             description,
             given_day: formattedGivenDay,
-            seller,
-            collector,
         };
 
         try {
-            const response = await fetch(`${API_URL}/users/add`, {
+            const response = await fetch(`http://3.77.237.29:3000/api-swagger/users/add`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -84,13 +87,13 @@ const AddBtn = () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message || "Serverda noma'lum xatolik yuz berdi");
+                throw new Error(errorData.message || "Server xatosi yuz berdi");
             }
 
             alert("Ma'lumot muvaffaqiyatli yuborildi");
             navigate("/");
         } catch (error) {
-            alert(`Xatolik yuz berdi: ${error.message}`);
+            alert(`Xatolik: ${error.message}`);
             console.error("Xatolik haqida ma'lumot:", error);
         }
     };
@@ -98,51 +101,20 @@ const AddBtn = () => {
     return (
         <div className="h-70vh max-w-[1000px] w-90% mx-auto">
             <form onSubmit={postMethod} className="grid grid-cols-2 gap-4">
-                <InputField label="Ismi" value={name} onChange={setName} />
-                <InputField label="Mahsulot nomi" value={productName} onChange={setProductName} />
-                <InputField label="Narxi" type="number" value={cost} onChange={setCost} />
+                <InputField label="Ismi" value={name} onChange={setName} required />
+                <InputField label="Mahsulot nomi" value={productName} onChange={setProductName} required />
+                <InputField label="Narxi" value={cost} onChange={setCost} />
                 <InputField label="Telefon raqami" value={phoneNumber} onChange={setPhoneNumber} />
                 <InputField label="2 - Telefon raqami" value={phoneNumber2} onChange={setPhoneNumber2} />
                 <InputField label="Ish joyi" value={workplace} onChange={setWorkplace} />
                 <InputField label="Pasport seriyasi" value={passportSeries} onChange={setPassportSeries} />
                 <InputField label="Berilgan Vaqti" type="date" value={givenDay} onChange={setGivenDay} />
-                <InputField label="Nechi oyga berildi" type="number" value={time} onChange={setTime} />
+                <InputField label="Nechi oyga berildi" value={time} onChange={setTime} />
                 <InputField label="Qo'shimcha ma'lumot" value={description} onChange={setDescription} />
                 <InputField label="Sotuvchi" value={seller} onChange={setSeller} />
 
-                <div className="flex justify-between py-2 px-4 items-center">
-                    <p className="text-xl">Manzilni Tanlang</p>
-                    <select
-                        value={zone}
-                        onChange={(e) => setZone(e.target.value)}
-                        className="p-2 border border-gray-300 rounded-lg"
-                        required
-                    >
-                        <option value="">Huduni Tanlang</option>
-                        {zones?.map((item) => (
-                            <option key={item?.id} value={item?.zone_name}>
-                                {item?.zone_name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className="flex justify-between py-2 px-4 items-center">
-                    <p className="text-xl">Yig'uvchi</p>
-                    <select
-                        value={collector}
-                        onChange={(e) => setCollector(e.target.value)}
-                        className="p-2 border border-gray-300 rounded-lg"
-                        required
-                    >
-                        <option value="">Yig'uvchini tanlang</option>
-                        {collectors?.map((item) => (
-                            <option key={item?.id} value={item?.collector_name}>
-                                {item?.collector_name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                <DropdownField label="Manzilni Tanlang" value={zone} onChange={setZone} options={zones} required />
+                <DropdownField label="Yig'uvchi" value={collector} onChange={setCollector} options={collectors} required />
 
                 <button type="submit" className="col-span-2 p-2 bg-blue-500 max-w-36 text-white rounded-lg">
                     Yuborish
@@ -152,15 +124,35 @@ const AddBtn = () => {
     );
 };
 
-const InputField = ({ label, type = "text", value, onChange }) => (
-    <div className="flex justify-between py-2 px-4 items-center">
-        <p className="text-xl">{label}</p>
+const InputField = ({ label, type = "text", value, onChange, required }) => (
+    <div className="flex flex-col">
+        <label className="text-xl">{label}</label>
         <input
             type={type}
             className="p-2 border-2 rounded-lg"
             value={value}
             onChange={(e) => onChange(e.target.value)}
+            required={required}
         />
+    </div>
+);
+
+const DropdownField = ({ label, value, onChange, options, required }) => (
+    <div className="flex flex-col">
+        <label className="text-xl">{label}</label>
+        <select
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            className="p-2 border border-gray-300 rounded-lg"
+            required={required}
+        >
+            <option value="">{label}</option>
+            {options?.map((item) => (
+                <option key={item.id} value={ item?.zone_name || item?.collector_name}>
+                    {item.name || item.zone_name || item.collector_name}
+                </option>
+            ))}
+        </select>
     </div>
 );
 

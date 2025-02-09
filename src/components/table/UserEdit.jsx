@@ -19,13 +19,11 @@ const UserEditModal = ({ isOpen, closeModal, user, updateUser }) => {
 
     const [collectors, setCollectors] = useState([]);
     const [zones, setZones] = useState([]);
+    const [loading, setLoading] = useState(false); // Loading holati qo'shildi
     const API_URL = process.env.REACT_APP_API_URL;
     
     useEffect(() => {
-        if (!API_URL) {
-            console.error("API URL aniqlanmagan! Iltimos, .env faylni tekshiring.");
-            return;
-        }
+        
         fetchCollectors();
         fetchZones();
     }, []);
@@ -62,6 +60,7 @@ const UserEditModal = ({ isOpen, closeModal, user, updateUser }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true); // Yuborish jarayoni boshlanishida loading holatini yoqamiz
         try {
             const response = await fetch(`${API_URL}/users/update/${user?.id}`, {
                 method: "PUT",
@@ -71,15 +70,21 @@ const UserEditModal = ({ isOpen, closeModal, user, updateUser }) => {
                 body: JSON.stringify(formData),
             });
 
-            if (response.ok) {
+            if (response.status === 204) {
+                console.log("Ma'lumot muvaffaqiyatli yangilandi, lekin hech qanday javob yo'q.");
+                updateUser(formData);
+                closeModal();
+                window.location.reload(); // Sahifani yangilash
+
+            } else {
                 const updatedUser = await response.json();
                 updateUser(updatedUser);
                 closeModal();
-            } else {
-                alert("Xatolik yuz berdi!");
             }
         } catch (error) {
             alert("Xatolik: " + error);
+        } finally {
+            setLoading(false); // Jarayon tugagach, loading holatini o‘chirib qo‘yamiz
         }
     };
 
@@ -90,7 +95,7 @@ const UserEditModal = ({ isOpen, closeModal, user, updateUser }) => {
         { name: "phone_number", label: "Telefon raqami", type: "text" },
         { name: "phone_number2", label: "Qo‘shimcha telefon raqam", type: "text" },
         { name: "workplace", label: "Ish joyi", type: "text" },
-        { name: "time", label: "Vaqt", type: "datetime-local" },
+        { name: "time", label: "Vaqt", type: "text" },
         { name: "seller", label: "Sotuvchi", type: "text" },
         { name: "passport_series", label: "Pasport seriyasi", type: "text" },
         { name: "description", label: "Izoh", type: "text" },
@@ -135,7 +140,13 @@ const UserEditModal = ({ isOpen, closeModal, user, updateUser }) => {
                             ))}
                         </select>
                     </div>
-                    <button type="submit" className="px-4 py-1 bg-blue-500 text-white w-40 rounded-md h-10">Saqlash</button>
+                    <button
+                        type="submit"
+                        className="px-4 py-1 bg-blue-500 text-white w-40 rounded-md h-10"
+                        disabled={loading} // Yuborish jarayonida tugmani o‘chirib qo‘yamiz
+                    >
+                        {loading ? "Loading..." : "Saqlash"}
+                    </button>
                 </form>
                 <button onClick={closeModal} className="mt-2 w-40 bg-gray-500 text-white p-2 rounded-md">Bekor qilish</button>
             </div>

@@ -1,9 +1,7 @@
 import React from "react";
 import img from "../../assets/img.jpg"
-import { useNavigate } from "react-router-dom";
 
 const HeaderNav = () => {
-  const navigate = useNavigate()
     return (
         <header className="flex items-center justify-between px-6 py-3 w-full  bg-white mx-auto">
             <div className="flex items-center gap-2">
