@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { MdEditSquare } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 
@@ -10,19 +10,20 @@ const Collector = () => {
 
   const API_URL = process.env.REACT_APP_API_URL;
 
-  const fetchCollectors = async () => {
+  const fetchCollectors = useCallback(async () => {
     try {
-      const response = await fetch(`${API_URL}/collector`);
-      const result = await response.json();
-      setData(result);
+        const response = await fetch(`${API_URL}/collector`);
+        const result = await response.json();
+        setData(result);
     } catch (error) {
-      console.error("Error fetching collectors:", error);
+        console.error("Error fetching collectors:", error);
     }
-  };
+}, [API_URL]); // Agar API_URL o‘zgaradigan bo‘lsa, uni dependency sifatida qo‘shing
 
-  useEffect(() => {
+useEffect(() => {
     fetchCollectors();
-  }, []);
+}, [fetchCollectors]);
+
 
   const toggleModal = (type = null, collector = null) => {
     if (type === "edit" && collector) {

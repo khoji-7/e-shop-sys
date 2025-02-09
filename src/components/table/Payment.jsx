@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useCallback } from "react";
 
 const PaymentModal = ({ isOpen, closeModal, handlePayment }) => {
     const [amount, setAmount] = useState(""); 
     const [collector, setCollector] = useState("");
     const [paymentMonth, setPaymentMonth] = useState(""); // This state will hold the selected month
     const [description, setDescription] = useState("");
-    const [collectors, setCollectors] = useState([]); // To store the list of collectors
 
-    useEffect(() => {
-        if (isOpen) {
-            fetchCollectors();
-        }
-    }, [isOpen]);
-
+    const [collectors, setCollectors] = useState([]);
     const API_URL = process.env.REACT_APP_API_URL;
 
-    const fetchCollectors = async () => {
+    const fetchCollectors = useCallback(async () => {
         try {
             const response = await fetch(`${API_URL}/collector`);
             const result = await response.json();
-            setCollectors(result); // Save the list of collectors to state
+            setCollectors(result);
         } catch (error) {
             console.error("Error fetching collectors:", error);
         }
-    };
+    }, [API_URL]); 
+
+    useEffect(() => {
+        if (isOpen) {
+            fetchCollectors(); 
+        }
+    }, [isOpen, fetchCollectors]); 
 
     const handleSubmit = (e) => {
         e.preventDefault();

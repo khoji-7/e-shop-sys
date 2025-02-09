@@ -44,7 +44,6 @@ const UserModal = ({ user, closeModal }) => {
   if (!user) return null;
 
   const givenDayFormatted = formatDate(user.given_day);
-  const updatedAtFormatted = formatDate(user.updatedat);
 
   const paymentStatus = user.payment_status ? "To'landi" : "Qarz";
   const paymentStatusColor = user.payment_status ? "text-green-500" : "text-red-500";

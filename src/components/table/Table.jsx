@@ -9,22 +9,45 @@ import { FaMoneyCheckAlt } from "react-icons/fa";
 
 const Table = () => {
     const [data, setData] = useState([]);
+    const [zones, setZones] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedZone, setSelectedZone] = useState(null);
     const itemsPerPage = 20;
 
     const API_URL = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
-        fetch(`${API_URL}/users?page=${currentPage}`)
+        if (!API_URL) {
+            console.error("API URL aniqlanmagan! Iltimos, .env faylni tekshiring.");
+            return;
+        }
+
+        let url = `${API_URL}/users?page=${currentPage}`;
+        if (selectedZone) {
+            url += `&zone=${selectedZone}`;
+        }
+
+        fetch(url)
             .then((response) => response.json())
-            .then((item) => setData(item))
+            .then((responseData) => {
+                if (responseData.data) {
+                    setData(responseData.data);
+                } else {
+                    setData(responseData);
+                }
+            })
             .catch((error) => console.error("Error:", error));
-    }, [API_URL, currentPage]);
+
+        fetch(`${API_URL}/zones`)
+            .then((res) => res.json())
+            .then((data) => setZones(data))
+            .catch((error) => console.error("Zonelarni olishda xatolik:", error));
+    }, [currentPage, selectedZone, API_URL]);
 
     const openModal = (user) => {
         setSelectedUser(user);
@@ -75,7 +98,7 @@ const Table = () => {
 
     const updateUser = (updatedUser) => {
         setData((prevData) => prevData.map((user) => (user.id === updatedUser.id ? updatedUser : user)));
-        window.location.reload(); // Sahifani qayta yuklash
+        closeEditModal();
     };
 
     const handlePayment = async (paymentData) => {
@@ -91,7 +114,10 @@ const Table = () => {
             if (response.ok) {
                 alert("To'lov muvaffaqiyatli amalga oshirildi!");
                 closePaymentModal();
-                window.location.reload(); // Sahifani yangilash
+                const updatedData = data.map((user) =>
+                    user.id === selectedUser.id ? { ...user, payment_status: true } : user
+                );
+                setData(updatedData);
             } else {
                 alert("Xatolik");
             }
@@ -100,19 +126,22 @@ const Table = () => {
         }
     };
 
-    const searchData =
-        searchTerm.length >= 3
-            ? data.filter(
-                  (item) =>
-                      (item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                      (item.product_name && item.product_name.toLowerCase().includes(searchTerm.toLowerCase()))
-              )
-            : data;
+    const filteredData = data.filter((item) => {
+        const matchesSearch = searchTerm.length >= 3
+            ? (item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+              (item.product_name && item.product_name.toLowerCase().includes(searchTerm.toLowerCase()))
+            : true;
 
-    const totalItems = searchData.length;
+        const matchesZone = selectedZone ? item.zone === selectedZone.toString() : true;
+
+        return matchesSearch && matchesZone;
+    });
+    
+
+    const totalItems = filteredData.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-    const paginatedData = searchData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     const handleNextPage = () => {
         if (currentPage < totalPages) {
@@ -127,11 +156,18 @@ const Table = () => {
     };
 
     return (
-        <div className="bg-[#f4f4f8] max-w-[1100px] w-[95%] mx-auto mt-2 h-[500px]">
-            <TableHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} openModal={openModal} />
+        <div className="bg-[#f4f4f8] max-w-[1100px] w-[95%] mx-auto mt-2 min-h-[500px]">
+            <TableHeader
+    searchTerm={searchTerm}
+    setSearchTerm={setSearchTerm}
+    selectedZone={selectedZone}
+    setSelectedZone={setSelectedZone}
+    zones={zones}
+    setData={setData}
+/>
 
-            <div className="mt-3 h-[420px] overflow-y-scroll">
-                <table className="w-full border-[1px] border-gray-400 h-[350px]">
+            <div className="mt-3 h-96 overflow-y-scroll">
+                <table className="w-full border-[1px] border-gray-400 h-80 overflow-y-scroll">
                     <thead className="bg-[#f9fafb] rounded-t-md border-2 border-gray-300">
                         <tr>
                             <th className="py-2 px-5 text-gray-600 font-medium text-[16px]">Id</th>

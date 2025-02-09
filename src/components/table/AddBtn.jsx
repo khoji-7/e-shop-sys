@@ -15,39 +15,41 @@ const AddBtn = () => {
     const [description, setDescription] = useState("");
     const [seller, setSeller] = useState("");
     const [collector, setCollector] = useState("");
+    const navigate = useNavigate();
     const [collectors, setCollectors] = useState([]);
     const [zones, setZones] = useState([]);
-    const navigate = useNavigate();
     const API_URL = process.env.REACT_APP_API_URL;
-
+    
     useEffect(() => {
         if (!API_URL) {
             console.error("API URL aniqlanmagan! Iltimos, .env faylni tekshiring.");
             return;
         }
+    
+        const fetchZones = async () => {
+            try {
+                const response = await fetch(`${API_URL}/zones`);
+                const data = await response.json();
+                setZones(data);
+            } catch (error) {
+                console.error("Manzillarni yuklashda xatolik:", error);
+            }
+        };
+    
+        const fetchCollectors = async () => {
+            try {
+                const response = await fetch(`${API_URL}/collector`);
+                const data = await response.json();
+                setCollectors(data);
+            } catch (error) {
+                console.error("Yig'uvchilarni yuklashda xatolik:", error);
+            }
+        };
+    
         fetchCollectors();
         fetchZones();
-    }, []);
-
-    const fetchZones = async () => {
-        try {
-            const response = await fetch(`${API_URL}/zones`);
-            const data = await response.json();
-            setZones(Array.isArray(data) ? data : []);
-        } catch (error) {
-            console.error("Manzillarni yuklashda xatolik:", error);
-        }
-    };
-
-    const fetchCollectors = async () => {
-        try {
-            const response = await fetch(`${API_URL}/collector`);
-            const data = await response.json();
-            setCollectors(Array.isArray(data) ? data : []);
-        } catch (error) {
-            console.error("Yig'uvchilarni yuklashda xatolik:", error);
-        }
-    };
+    }, [API_URL]); 
+    
 
     const postMethod = async (e) => {
         e.preventDefault();
@@ -61,19 +63,19 @@ const AddBtn = () => {
         const formattedGivenDay = givenDay ? new Date(givenDay).toISOString() : null;
 
         const formData = {
-            name,
-            product_name: productName,
-            cost: cost || "0",
-            phone_number: phoneNumber,
-            phone_number2: phoneNumber2,
-            workplace,
-            time: formattedTime ? new Date(formattedTime).toISOString() : "",
-            zone,
-            seller,
-            collector,
-            passport_series: passportSeries,
-            description,
-            given_day: formattedGivenDay,
+            name: name.toString(), // string formatga o'tkazish
+            product_name: productName.toString(), // string formatga o'tkazish
+            cost: Number(cost) || 0, // number formatga o'tkazish
+            phone_number: phoneNumber.toString(), // string formatga o'tkazish
+            phone_number2: phoneNumber2.toString(), // string formatga o'tkazish
+            workplace: workplace.toString(), // string formatga o'tkazish
+            time: formattedTime ? new Date(formattedTime).toISOString() : "", // ISO string formatga o'tkazish
+            zone: zone.toString(), // string formatga o'tkazish
+            seller: seller.toString(), // string formatga o'tkazish
+            collector: collector.toString(), // string formatga o'tkazish
+            passport_series: passportSeries.toString(), // string formatga o'tkazish
+            description: description.toString(), // string formatga o'tkazish
+            given_day: formattedGivenDay, //
         };
 
         try {
@@ -101,20 +103,20 @@ const AddBtn = () => {
     return (
         <div className="h-70vh max-w-[1000px] w-90% mx-auto">
             <form onSubmit={postMethod} className="grid grid-cols-2 gap-4">
-                <InputField label="Ismi" value={name} onChange={setName} required />
-                <InputField label="Mahsulot nomi" value={productName} onChange={setProductName} required />
-                <InputField label="Narxi" value={cost} onChange={setCost} />
-                <InputField label="Telefon raqami" value={phoneNumber} onChange={setPhoneNumber} />
-                <InputField label="2 - Telefon raqami" value={phoneNumber2} onChange={setPhoneNumber2} />
-                <InputField label="Ish joyi" value={workplace} onChange={setWorkplace} />
-                <InputField label="Pasport seriyasi" value={passportSeries} onChange={setPassportSeries} />
-                <InputField label="Berilgan Vaqti" type="date" value={givenDay} onChange={setGivenDay} />
-                <InputField label="Nechi oyga berildi" value={time} onChange={setTime} />
-                <InputField label="Qo'shimcha ma'lumot" value={description} onChange={setDescription} />
-                <InputField label="Sotuvchi" value={seller} onChange={setSeller} />
+                <InputField label="Ismi" name="name" value={name} onChange={setName} required />
+                <InputField label="Mahsulot nomi" name="product_name" value={productName} onChange={setProductName} required />
+                <InputField label="Narxi" name="cost" type="number" value={cost} onChange={setCost} />
+                <InputField label="Telefon raqami" name="phone_number" value={phoneNumber} onChange={setPhoneNumber} />
+                <InputField label="2 - Telefon raqami" name="phone_number2" value={phoneNumber2} onChange={setPhoneNumber2} />
+                <InputField label="Ish joyi" name="workplace" value={workplace} onChange={setWorkplace} />
+                <InputField label="Pasport seriyasi" name="passport_series" value={passportSeries} onChange={setPassportSeries} />
+                <InputField label="Berilgan Vaqti" name="given_day" type="date" value={givenDay} onChange={setGivenDay} />
+                <InputField label="Nechi oyga berildi" name="time" type="text" value={time} onChange={setTime} />
+                <InputField label="Qo'shimcha ma'lumot" name="description" value={description} onChange={setDescription} />
+                <InputField label="Sotuvchi" name="seller" value={seller} onChange={setSeller} />
 
-                <DropdownField label="Manzilni Tanlang" value={zone} onChange={setZone} options={zones} required />
-                <DropdownField label="Yig'uvchi" value={collector} onChange={setCollector} options={collectors} required />
+                <DropdownField label="Manzilni Tanlang" name="zone" value={zone} onChange={setZone} options={zones} required />
+                <DropdownField label="Yig'uvchi" name="collector" value={collector} onChange={setCollector} options={collectors} required />
 
                 <button type="submit" className="col-span-2 p-2 bg-blue-500 max-w-36 text-white rounded-lg">
                     Yuborish
@@ -124,11 +126,12 @@ const AddBtn = () => {
     );
 };
 
-const InputField = ({ label, type = "text", value, onChange, required }) => (
-    <div className="flex flex-col">
-        <label className="text-xl">{label}</label>
+const InputField = ({ label, name, type = "text", value, onChange, required }) => (
+    <div className="flex justify-between py-2 px-4 items-center">
+        <p className="text-xl">{label}</p>
         <input
             type={type}
+            name={name}
             className="p-2 border-2 rounded-lg"
             value={value}
             onChange={(e) => onChange(e.target.value)}
@@ -137,10 +140,11 @@ const InputField = ({ label, type = "text", value, onChange, required }) => (
     </div>
 );
 
-const DropdownField = ({ label, value, onChange, options, required }) => (
-    <div className="flex flex-col">
-        <label className="text-xl">{label}</label>
+const DropdownField = ({ label, name, value, onChange, options, required }) => (
+    <div className="flex justify-between py-2 px-4 items-center">
+        <p className="text-xl">{label}</p>
         <select
+            name={name}
             value={value}
             onChange={(e) => onChange(e.target.value)}
             className="p-2 border border-gray-300 rounded-lg"
@@ -148,12 +152,12 @@ const DropdownField = ({ label, value, onChange, options, required }) => (
         >
             <option value="">{label}</option>
             {options?.map((item) => (
-                <option key={item.id} value={ item?.zone_name || item?.collector_name}>
-                    {item.name || item.zone_name || item.collector_name}
+                <option key={item?.id} value={item?.zone_name || item?.collector_name}>
+                    {item?.zone_name || item?.collector_name}
                 </option>
             ))}
         </select>
     </div>
 );
 
-export default AddBtn;
+export default AddBtn; 

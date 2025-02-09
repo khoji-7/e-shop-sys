@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from "react";
 
 const CollectorMoney = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const API_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     fetch(`${API_URL}/collector/all-money`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Serverdan noto‘g‘ri javob keldi");
+        }
+        return response.json();
+      })
       .then((result) => setData(result))
-      .catch((err) => setError("Ma'lumotlarni olishda xatolik yuz berdi"));
-  }, [API_URL]);
- 
+      .catch((err) => {
+        console.error("Fetch xatosi:", err);
+        setError("Ma'lumotlarni olishda xatolik yuz berdi");
+      });
+  }, [API_URL]); 
+  
+  if (error) return <p className="text-red-500">{error}</p>;
+  if (!data) return <p>Yuklanmoqda...</p>;
 
   return (
     <div className="p-6">

@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import axios from "axios";
+
 
 const AllZone = () => {
     const API_URL = process.env.REACT_APP_API_URL;
@@ -10,17 +11,23 @@ const AllZone = () => {
     const [description, setDescription] = useState("");
     const [editId, setEditId] = useState(null);
 
+    const fetchZones = useCallback(async () => {
+        try {
+            const response = await fetch(`${API_URL}/zones`);
+            const result = await response.json();
+            setData(result);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }, [API_URL]);
+    
     useEffect(() => {
         fetchZones();
-    }, []);
+    }, [fetchZones]);
+    
+    
 
-    const fetchZones = () => {
-        fetch(`${API_URL}/zones`)
-            .then((response) => response.json())
-            .then((item) => setData(item))
-            .catch((error) => console.error("Error:", error));
-    };
-
+    
     const handleAddZone = async (e) => {
         e.preventDefault();
         const newZone = { zone_name: zoneName, description };

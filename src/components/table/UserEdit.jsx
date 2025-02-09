@@ -23,31 +23,32 @@ const UserEditModal = ({ isOpen, closeModal, user, updateUser }) => {
     const API_URL = process.env.REACT_APP_API_URL;
     
     useEffect(() => {
+        if (!API_URL) return;
         
-        fetchCollectors();
+        const fetchZones = async () => {
+            try {
+                const response = await fetch(`${API_URL}/zones`);
+                const result = await response.json();
+                setZones(result);
+            } catch (error) {
+                console.error("Error fetching zones:", error);
+            }
+        };
+    
+        const fetchCollectors = async () => {
+            try {
+                const response = await fetch(`${API_URL}/collector`);
+                const result = await response.json();
+                setCollectors(result);
+            } catch (error) {
+                console.error("Error fetching collectors:", error);
+            }
+        };
+    
         fetchZones();
-    }, []);
-
-    const fetchZones = async () => {
-        try {
-            const response = await fetch(`${API_URL}/zones`);
-            const result = await response.json();
-            setZones(result);
-        } catch (error) {
-            console.error("Error fetching zones:", error);
-        }
-    };
-
-    const fetchCollectors = async () => {
-        try {
-            const response = await fetch(`${API_URL}/collector`);
-            const result = await response.json();
-            setCollectors(result);
-        } catch (error) {
-            console.error("Error fetching collectors:", error);
-        }
-    };
-
+        fetchCollectors();
+    }, [API_URL]);
+    
     useEffect(() => {
         if (user) {
             setFormData(user);
