@@ -125,10 +125,10 @@ const Table = () => {
     };
 
     return (
-        <div className="bg-[#f4f4f8] max-w-[1100px] w-[95%] mx-auto mt-4 h-[500px]">
+        <div className="bg-[#f4f4f8] max-w-[1100px] w-[95%] mx-auto mt-2 h-[500px]">
             <TableHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} openModal={openModal} />
 
-            <div className="mt-5 h-[420px] overflow-y-scroll">
+            <div className="mt-3 h-[420px] overflow-y-scroll">
                 <table className="w-full border-[1px] border-gray-400 h-[350px]">
                     <thead className="bg-[#f9fafb] rounded-t-md border-2 border-gray-300">
                         <tr>

@@ -26,10 +26,10 @@ const Dashboard = () => {
             fetch(`${API_URL}/main/month`).then((res) => res.json()),
         ])
         .then(([allMoney, notPaid, today, month]) => {
-            console.log("Jami pul:", allMoney);
-            console.log("To'lamaganlar:", notPaid);
-            console.log("Bugun to'laganlar:", today);
-            console.log("Bu oy to'laganlar:", month);
+            // console.log("Jami pul:", allMoney);
+            // console.log("To'lamaganlar:", notPaid);
+            // console.log("Bugun to'laganlar:", today);
+            // console.log("Bu oy to'laganlar:", month);
 
             setStats({
                 allMoney,
@@ -45,43 +45,44 @@ const Dashboard = () => {
     }, [API_URL]);
 
     return (
-        <div className="max-w-[1100px] w-[90%] mx-auto flex px-4 justify-between gap-4">
+        <div className="max-w-[1100px] w-[90%] mt-1 mx-auto flex px-4 justify-between gap-4">
             <StatCard
                 icon={<MdOutlineAttachMoney />}
                 color="bg-red-400"
                 title="Jami pul"
-                value={`${stats.allMoney?.all_income?.sum || 0} so'm`}
+                value={`${stats.allMoney?.all_income?.sum || 0} so'm  ${stats?.allMoney?.paid_money?.sum} so'm to'langan`}
             />
-            <StatCard
-                icon={<CgDanger />}
-                color="bg-blue-500"
-                title="To'lamaganlar"
-                value={`${stats.headPay?.count}/${stats.allMoney?.income_users_count?.count || 0} kishi  ${stats?.headPay.sum} so'm`}
-                onClick={() =>
-                    setModalData({ type: "notPaid", title: "To'lamaganlar Ro'yxati", users: stats.notPaidUsers })
-                }
-                clickable
-            />
-            <StatCard
-                icon={<FiCheckCircle />}
-                color="bg-green-500"
-                title="Oylik to'lov"
-                value={`${stats.monthPay?.count} kishi ${stats?.monthPay.sum} so'm`}
-                onClick={() =>
-                    setModalData({ type: "monthPaid", title: "Bu oy to'laganlar", users: stats.monthPaidUsers })
-                }
-                clickable
-            />
-            <StatCard
-                icon={<MdPeopleAlt />}
-                color="bg-orange-400"
-                title="Bugungi to'lov"
-                value={`${stats.payUser?.count} kishi ${stats?.payUser.sum} so'm`}
-                onClick={() =>
-                    setModalData({ type: "todayPaid", title: "Bugun to'laganlar", users: stats.todayPaidUsers })
-                }
-                clickable
-            />
+           <StatCard
+    icon={<CgDanger />}
+    color="bg-blue-500"
+    title="To'lamaganlar"
+    value={`${stats.headPay?.count}/${stats.allMoney?.income_users_count?.count || 0} kishi ${stats?.headPay?.sum || "0 so'm"}`}
+    onClick={() =>
+        setModalData({ type: "notPaid", title: "To'lamaganlar Ro'yxati", users: stats.notPaidUsers })
+    }
+    clickable
+/>
+<StatCard
+    icon={<FiCheckCircle />}
+    color="bg-green-500"
+    title="Oylik to'lov"
+    value={`${stats.monthPay?.count} kishi ${stats?.monthPay?.sum || "0 so'm"}`}
+    onClick={() =>
+        setModalData({ type: "monthPaid", title: "Bu oy to'laganlar", users: stats.monthPaidUsers })
+    }
+    clickable
+/>
+<StatCard
+    icon={<MdPeopleAlt />}
+    color="bg-orange-400"
+    title="Bugungi to'lov"
+    value={`${stats.payUser?.count} kishi ${stats?.payUser?.sum || "0 so'm"}`}
+    onClick={() =>
+        setModalData({ type: "todayPaid", title: "Bugun to'laganlar", users: stats.todayPaidUsers })
+    }
+    clickable
+/>
+
 
             {modalData && (
                 <PaymentList
@@ -97,12 +98,12 @@ const Dashboard = () => {
 
 const StatCard = ({ icon, color, title, value, onClick, clickable }) => (
     <div
-        className={`${color} text-white rounded-xl border-2 h-[90px] py-3 items-center px-4 w-80 ${
+        className={`${color} text-white rounded-xl border-2 h-[100px] py-3 items-center px-4 w-[350px] ${
             clickable ? "cursor-pointer" : ""
         }`}
         onClick={onClick}
     >
-        <div className="text-xl gap-1 items-center flex mx-auto">
+        <div className="text-lg gap-1 items-center flex mx-auto">
             {icon} <p>{title}</p>
         </div>
         <p>{value}</p>

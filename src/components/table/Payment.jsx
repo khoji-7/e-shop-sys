@@ -43,6 +43,9 @@ const PaymentModal = ({ isOpen, closeModal, handlePayment }) => {
             <div className="bg-white p-6 rounded-lg w-[400px]">
                 <h2 className="text-xl font-bold mb-4">To'lov qilish</h2>
                 <form onSubmit={handleSubmit}>
+                    <p>
+                        {}
+                    </p>
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Miqdor</label>
                         <input

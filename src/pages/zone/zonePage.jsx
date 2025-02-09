@@ -1,7 +1,9 @@
 import React from 'react'
 import AllZone from '../../components/zone/allZone'
 
-const zonePage = () => {
+
+const ZonePage = () => {
+ 
   return (
     <div>
       <h1 className='text-2xl font-bold text-[#363740] '>
@@ -12,4 +14,4 @@ const zonePage = () => {
   )
 }
 
-export default zonePage
+export default ZonePage
