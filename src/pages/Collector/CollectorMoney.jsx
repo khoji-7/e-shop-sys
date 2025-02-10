@@ -18,16 +18,16 @@ const CollectorMoney = () => {
         console.error("Fetch xatosi:", err);
         setError("Ma'lumotlarni olishda xatolik yuz berdi");
       });
-  }, [API_URL]); 
-  
+  }, [API_URL]);
+
   if (error) return <p className="text-red-500">{error}</p>;
   if (!data) return <p>Yuklanmoqda...</p>;
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-semibold mb-4">Collector To'lovlar</h2>
-
-
+      <h2 className="text-2xl font-semibold mb-4">
+        Yig'uvchilar yig'gan To'lovlar
+      </h2>
 
       {data?.result?.length > 0 ? (
         <table className="min-w-full table-auto border-collapse shadow-lg rounded-lg overflow-hidden">
@@ -40,8 +40,12 @@ const CollectorMoney = () => {
           <tbody>
             {data?.result?.map((item, index) => (
               <tr key={index} className="border-b">
-                <td className="py-2 px-6 text-gray-900">{item.collector_name}</td>
-                <td className="py-2 px-6 text-gray-900">{item.total_collected} so'm</td>
+                <td className="py-2 px-6 text-gray-900">
+                  {item.collector_name}
+                </td>
+                <td className="py-2 px-6 text-gray-900">
+                  {Number(item.total_collected).toLocaleString()} so'm
+                </td>
               </tr>
             ))}
           </tbody>

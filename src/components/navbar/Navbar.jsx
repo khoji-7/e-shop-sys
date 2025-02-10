@@ -13,12 +13,10 @@ const HeaderNav = () => {
                 <div className="flex items-center gap-3" >
                 <img src={img} alt={`Profile picture of ${namen}`}  aria-hidden="true"  className="object-cover w-12 h-12 rounded-full border border-gray-300" />
                 <div className="text-xs">
-                  <p>
-                    Surname
-                  </p>
-                  <p>
-                    Name
-                  </p>
+                <p>Avaz</p>
+            <p>Azizov</p>
+
+                  
                 </div>
                 </div>
             </div>
