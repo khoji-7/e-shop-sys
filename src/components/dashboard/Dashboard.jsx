@@ -51,7 +51,7 @@ const Dashboard = () => {
         title="Jami pul"
         value={
           <>
-            <p>
+            <span>
               {parseInt(
                 stats?.allMoney?.paid_money?.sum || 0,
                 10
@@ -62,11 +62,12 @@ const Dashboard = () => {
                 10
               ).toLocaleString()}{" "}
               so'm
-            </p>
-            <b className="text-sm">
+            </span>
+            <span className="text-sm">
+                <br/>
               {stats?.allMoney?.paid_users_count?.count || 0} /
               {stats?.allMoney?.income_users_count?.count || 0} kishi to'lagan
-            </b>
+            </span>
           </>
         }
       />
