@@ -41,7 +41,6 @@ const PaymentList = ({ type, users, onClose }) => {
                   "Muddati",
                   "Tel nomer",
                   "Yig'uvchi",
-                  "Qo'shimcha",
                 ].map((header) => (
                   <th
                     key={header}
@@ -81,9 +80,7 @@ const PaymentList = ({ type, users, onClose }) => {
                     <td className="px-5 py-1">
                       {user?.collector || "Noma'lum"}
                     </td>
-                    <td className="px-5 py-1">
-                      {user?.description || "Noma'lum"}
-                    </td>
+                    
                   </tr>
                 ))
               ) : (

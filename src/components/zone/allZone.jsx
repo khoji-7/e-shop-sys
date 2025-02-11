@@ -67,7 +67,7 @@ const AllZone = () => {
 
     const handleDownload = async (zone) => {
         try {
-            const response = await axios.get(`http://3.77.237.29:3000/excel-download?zone_name=${zone}`, {
+            const response = await axios.get(`${API_URL}/excel-download?zone_name=${zone}`, {
                 responseType: "blob",
             });
 

@@ -80,7 +80,7 @@ const AddBtn = () => {
     console.log(formData);
 
     try {
-      const response = await fetch(`http://3.77.237.29:3000/users/add`, {
+      const response = await fetch(`${API_URL}/users/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
